@@ -71,7 +71,7 @@ public class NetworkManager : MonoBehaviour {
 			}
 			//Move players involved
 			items [snapshot.Key] = snapshot.DictionaryValue;
-			if (snapshot.Key.StartsWith("Players")) {
+			if (snapshot.Key.StartsWith("Player_")) {
 				Vector3 initPos = JsonUtility.FromJson<Vector3>(snapshot.DictionaryValue["position"].ToString());
 				GameObject player = (GameObject)Instantiate(prefab,initPos,Quaternion.identity);
 				player.transform.parent = transform;
@@ -97,10 +97,10 @@ public class NetworkManager : MonoBehaviour {
 	/// Create a Firebase object based on this current player logged in
 	/// </summary>
 	void InitFirebasePlayer(string id, Vector3 pos) {
-		identifier = id;
+		identifier = "Player_"+id;
 		IDictionary<string, object> data = new Dictionary<string, object>();
 		data.Add ("position", JsonUtility.ToJson(pos));
 		data.Add ("rotation", JsonUtility.ToJson(Quaternion.identity));
-		firebase.Child("Players/"+identifier).SetValue(data);
+		firebase.Child(identifier).SetValue(data);
 	}
 }
