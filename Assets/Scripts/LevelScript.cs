@@ -7,6 +7,7 @@ public class LevelScript : MonoBehaviour {
 
 
 	public GameObject CubeA;
+	public GameObject CubeB;
 
 	// Use this for initialization
 	void Start () {
@@ -34,9 +35,18 @@ public class LevelScript : MonoBehaviour {
 				int z = 0;
 				for (;z<line.Length; ++z)
 				{
-					if (line[z] != ' ')
+					var c = line[z];
+					if (c != ' ')
 					{
-						CreateBox (CubeA, new Vector3(-45+x*10,-45+y*10,-45+z*10));
+							GameObject prefab = null;
+							if (c == 'A')
+								prefab = CubeA;
+							else if (c == 'B')
+								prefab = CubeB;
+							if (prefab == null)
+								prefab = CubeA;
+							if (prefab != null)
+								CreateBox (prefab, new Vector3(-45+x*10,-45+y*10,-45+z*10));
 					}
 				}
 			}
