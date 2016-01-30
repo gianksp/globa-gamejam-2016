@@ -71,7 +71,7 @@ public class NetworkManager : MonoBehaviour {
 			}
 			//Move players involved
 			items [snapshot.Key] = snapshot.DictionaryValue;
-			if (snapshot.Key != "cube") {
+			if (snapshot.Key.StartsWith("Players")) {
 				Vector3 initPos = JsonUtility.FromJson<Vector3>(snapshot.DictionaryValue["position"].ToString());
 				GameObject player = (GameObject)Instantiate(prefab,initPos,Quaternion.identity);
 				player.transform.parent = transform;
@@ -101,6 +101,6 @@ public class NetworkManager : MonoBehaviour {
 		IDictionary<string, object> data = new Dictionary<string, object>();
 		data.Add ("position", JsonUtility.ToJson(pos));
 		data.Add ("rotation", JsonUtility.ToJson(Quaternion.identity));
-		firebase.Child(identifier).SetValue(data);
+		firebase.Child("Players/"+identifier).SetValue(data);
 	}
 }
