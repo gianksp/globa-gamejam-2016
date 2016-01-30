@@ -28,10 +28,10 @@ public class Cube : NetworkItem {
 			if (_properties != null && _properties.Count > 0) {
 				//Update position
 				_targetPosition    = JsonUtility.FromJson<Vector3> (_properties["position"].ToString());
-				transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime);
+				transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.time);
 
 				_targetRotation    = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
-				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime);
+				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.time);
 
 				float targetLight = float.Parse(_properties["light"].ToString());
 				float intensity   = light/100f;
