@@ -9,7 +9,7 @@ public class Cube : NetworkItem {
 	private Quaternion _targetRotation;
 	private float light;
 	private float fog;
-	public Light masterLight;
+//	public Light masterLight;
 	public float targetLight;
 	public float intensity;
 
@@ -31,13 +31,12 @@ public class Cube : NetworkItem {
 				
 				_targetRotation    = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
 				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime*5f);
-
 				targetLight = float.Parse(_properties["light"].ToString());
 				intensity   = light/100f > 1 ? 1 : light/100f;
 				light = Mathf.Lerp(light, targetLight, Time.deltaTime*2f);
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;
-				masterLight.intensity           = intensity;
+//				masterLight.intensity           = intensity;
 			}
 		} catch (Exception ex) { }
 	}
