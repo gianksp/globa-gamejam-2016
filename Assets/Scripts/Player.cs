@@ -26,7 +26,7 @@ public class Player : NetworkItem {
 
 		//Playable
 		if (_isPlayer) {
-
+			MoveByGamepad ();
 //			Move ();
 //			Jump ();
 
@@ -37,9 +37,16 @@ public class Player : NetworkItem {
 			//Non playable draw based on properties read
 			InterpretValues ();
 		}
-		
-	}
 
+	}
+	public float speed = 10.0F;
+	void MoveByGamepad()
+	{
+		var v = Input.GetAxis ("Vertical")*speed;
+		var h = Input.GetAxis ("Horizontal")*speed;
+		transform.Translate (transform.forward * v * Time.deltaTime);
+		transform.Translate (transform.right * h * Time.deltaTime);
+	}
 	/// <summary>
 	/// Based on the values stored in "SetValues" use them to update this gameobject instance
 	/// </summary>
