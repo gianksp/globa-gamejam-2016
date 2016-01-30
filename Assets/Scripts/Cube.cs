@@ -28,14 +28,14 @@ public class Cube : NetworkItem {
 			if (_properties != null && _properties.Count > 0) {
 				//Update position
 				_targetPosition    = JsonUtility.FromJson<Vector3> (_properties["position"].ToString());
-				transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.time);
+				transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime);
 
 				_targetRotation    = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
-				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.time);
+				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime);
 
 				float targetLight = float.Parse(_properties["light"].ToString());
 				float intensity   = light/100f;
-				light = Mathf.Lerp(light, targetLight, Time.deltaTime);
+				light = Mathf.Lerp(light, targetLight, Time.deltaTime*2f);
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;
 				masterLight.intensity           = intensity;

@@ -74,6 +74,7 @@ public class NetworkManager : MonoBehaviour {
 			if (snapshot.Key != "scene" && snapshot.Key != "cube") {
 				Vector3 initPos = JsonUtility.FromJson<Vector3>(snapshot.DictionaryValue["position"].ToString());
 				GameObject player = (GameObject)Instantiate(prefab,initPos,Quaternion.identity);
+				player.transform.parent = transform;
 				player.GetComponent<NetworkItem>().identifier = snapshot.Key;
 			}
 		} catch (ArgumentNullException) {         }
