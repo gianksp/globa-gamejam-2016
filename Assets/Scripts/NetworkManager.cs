@@ -59,7 +59,7 @@ public class NetworkManager : MonoBehaviour {
 		} catch (ArgumentNullException) {         }
 		yield return null;
 	}
-
+	const string _levelPrefix = "Level";
 	/// <summary>
 	/// This instance was created, init it
 	/// </summary>
@@ -69,6 +69,7 @@ public class NetworkManager : MonoBehaviour {
 			if (items == null) {
 				items = new Dictionary<string,object>();
 			}
+
 			//Move players involved
 			items [snapshot.Key] = snapshot.DictionaryValue;
 			if (snapshot.Key.StartsWith("Player_")) {
@@ -76,6 +77,12 @@ public class NetworkManager : MonoBehaviour {
 				GameObject player = (GameObject)Instantiate(prefab,initPos,Quaternion.identity);
 				player.transform.parent = transform;
 				player.GetComponent<NetworkItem>().identifier = snapshot.Key;
+			}
+			if (snapshot.Key == _levelPrefix)
+			{
+				var level = this.gameObject.GetComponentInChildren<LevelScript>();
+
+				level.PopulateLayers(snapshot.DictionaryValue);
 			}
 		} catch (ArgumentNullException) {         }
 		yield return null;
