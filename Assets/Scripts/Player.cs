@@ -49,9 +49,8 @@ public class Player : NetworkItem {
 	{
 		var v = Input.GetAxis ("Vertical")*speed;
 		var h = Input.GetAxis ("Horizontal")*speed;
-		Vector3 forward = Vector3.Project (head.transform.forward, transform.forward);
-		transform.Translate (forward * v * Time.deltaTime,Space.World);
-		transform.Translate (head.transform.right * h * Time.deltaTime);
+		transform.Translate (head.transform.forward * v * Time.deltaTime,Space.World);
+		transform.Translate (head.transform.right * h * Time.deltaTime,Space.Self);
 	}
 	/// <summary>
 	/// Based on the values stored in "SetValues" use them to update this gameobject instance
