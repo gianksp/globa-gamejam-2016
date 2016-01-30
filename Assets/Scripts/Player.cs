@@ -33,7 +33,7 @@ public class Player : NetworkItem {
 			MoveByGamepad ();
 
 			//Auto move for now
-			transform.Translate(head.transform.forward*0.1f);
+//			transform.Translate(head.transform.forward*0.1f);
 
 			//Set properties to propagate
 			SetValues ();
@@ -49,8 +49,8 @@ public class Player : NetworkItem {
 	{
 		var v = Input.GetAxis ("Vertical")*speed;
 		var h = Input.GetAxis ("Horizontal")*speed;
-		transform.Translate (transform.forward * v * Time.deltaTime);
-		transform.Translate (transform.right * h * Time.deltaTime);
+		transform.Translate (head.transform.forward * v * Time.deltaTime,Space.World);
+		transform.Translate (head.transform.right * h * Time.deltaTime);
 	}
 	/// <summary>
 	/// Based on the values stored in "SetValues" use them to update this gameobject instance

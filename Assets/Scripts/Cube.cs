@@ -33,7 +33,7 @@ public class Cube : NetworkItem {
 				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime*5f);
 
 				targetLight = float.Parse(_properties["light"].ToString());
-				intensity   = light/100f;
+				intensity   = light/100f > 1 ? 1 : light/100f;
 				light = Mathf.Lerp(light, targetLight, Time.deltaTime*2f);
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;
