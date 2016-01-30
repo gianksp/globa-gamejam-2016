@@ -37,7 +37,7 @@ public class Player : NetworkItem {
 			//Non playable draw based on properties read
 			InterpretValues ();
 		}
-		Debug.Log (Quaternion.identity);
+		
 	}
 
 	/// <summary>

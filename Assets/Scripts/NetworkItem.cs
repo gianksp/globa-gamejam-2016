@@ -30,7 +30,15 @@ public class NetworkItem : MonoBehaviour {
 		if (_isPlayer && _playerRef != null) {
 			_playerRef.SetValue (_properties);
 		} else if (identifier != null && NetworkManager.items != null){
-			_properties = (Dictionary<string,object>)NetworkManager.items [identifier];
+			object data;
+			if (NetworkManager.items.TryGetValue(identifier, out data))
+			{
+				_properties = (Dictionary<string,object>)data;
+			}
+			else
+			{
+			    Destroy(gameObject);
+			}
 		}
 	}
 

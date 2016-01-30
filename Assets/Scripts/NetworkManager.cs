@@ -25,7 +25,7 @@ public class NetworkManager : MonoBehaviour {
 	void Start () {
 		
 		//Initialise this object in map
-		Vector3 initialPosition = new Vector3 (UnityEngine.Random.Range (-4, 4), 2, (UnityEngine.Random.Range (-4, 4)));
+		Vector3 initialPosition = Vector3.zero;
 		firebase.UnAuth ();
 		firebase.AuthAnonymously ((AuthData auth) => {
 			InitFirebasePlayer(auth.Uid,initialPosition);
