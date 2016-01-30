@@ -71,7 +71,7 @@ public class NetworkManager : MonoBehaviour {
 			}
 			//Move players involved
 			items [snapshot.Key] = snapshot.DictionaryValue;
-			if (snapshot.Key != "scene" && snapshot.Key != "cube") {
+			if (snapshot.Key != "cube") {
 				Vector3 initPos = JsonUtility.FromJson<Vector3>(snapshot.DictionaryValue["position"].ToString());
 				GameObject player = (GameObject)Instantiate(prefab,initPos,Quaternion.identity);
 				player.transform.parent = transform;

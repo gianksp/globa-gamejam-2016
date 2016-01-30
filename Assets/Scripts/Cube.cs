@@ -10,6 +10,8 @@ public class Cube : NetworkItem {
 	private float light;
 	private float fog;
 	public Light masterLight;
+	public float targetLight;
+	public float intensity;
 
 	/// <summary>
 	/// Fixeds the update. Only the player controlling can write to firebase, everyone else must read and interpret
@@ -26,21 +28,17 @@ public class Cube : NetworkItem {
 	public void InterpretValues() {
 		try {
 			if (_properties != null && _properties.Count > 0) {
-				//Update position
-				_targetPosition    = JsonUtility.FromJson<Vector3> (_properties["position"].ToString());
-				transform.position = Vector3.Lerp(transform.position, _targetPosition, Time.deltaTime);
-
+				
 				_targetRotation    = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
-				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime);
+				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime*5f);
 
-				float targetLight = float.Parse(_properties["light"].ToString());
-				float intensity   = light/100f;
+				targetLight = float.Parse(_properties["light"].ToString());
+				intensity   = light/100f;
 				light = Mathf.Lerp(light, targetLight, Time.deltaTime*2f);
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;
 				masterLight.intensity           = intensity;
 			}
 		} catch (Exception ex) { }
-		Debug.Log("THIS LIGHT "+light);
 	}
 }
