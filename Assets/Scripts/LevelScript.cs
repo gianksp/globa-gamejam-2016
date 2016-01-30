@@ -9,6 +9,8 @@ public class LevelScript : MonoBehaviour {
 	public GameObject CubeA;
 	public GameObject CubeB;
 
+	public List<Vector3> spawnPoints = new List<Vector3> ();
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -20,7 +22,7 @@ public class LevelScript : MonoBehaviour {
 		c.transform.localPosition = pos;
 		c.transform.localRotation = Quaternion.identity;
 	}
-	public void PopulateLayers(IDictionary<string,object> lines)
+	public void PopulateLayers(IDictionary<string,object> lines, NetworkManager nm)
 	{
 		try{
 		foreach (var level in lines) {
@@ -38,6 +40,12 @@ public class LevelScript : MonoBehaviour {
 					var c = line[z];
 					if (c != ' ')
 					{
+							var pos = new Vector3(-45+x*10,-45+y*10,-45+z*10);
+							if (c == '.')
+							{
+								spawnPoints.Add(pos);
+								continue;
+							}
 							GameObject prefab = null;
 							if (c == 'A')
 								prefab = CubeA;
@@ -46,7 +54,7 @@ public class LevelScript : MonoBehaviour {
 							if (prefab == null)
 								prefab = CubeA;
 							if (prefab != null)
-								CreateBox (prefab, new Vector3(-45+x*10,-45+y*10,-45+z*10));
+								CreateBox (prefab, pos);
 					}
 				}
 			}
@@ -55,7 +63,13 @@ public class LevelScript : MonoBehaviour {
 		} catch (Exception ex) {
 			Debug.Log (ex);
 		}
+
+		if (spawnPoints.Count == 0)
+			nm.CreateLocalPlayer (new Vector3 (0, 0, 0));
+		else 
+			nm.CreateLocalPlayer (spawnPoints[UnityEngine.Random.Range(0,spawnPoints.Count)]);
 	}
+
 	// Update is called once per frame
 	void Update () {
 	

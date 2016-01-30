@@ -19,6 +19,8 @@ public class NetworkManager : MonoBehaviour {
 		firebase = Firebase.CreateNew ("https://godcube.firebaseio.com/");
 	}
 
+	string authUid;
+
 	/// <summary>
 	/// Initialise this player
 	/// </summary>
@@ -28,7 +30,7 @@ public class NetworkManager : MonoBehaviour {
 		Vector3 initialPosition = Vector3.zero;
 		firebase.UnAuth ();
 		firebase.AuthAnonymously ((AuthData auth) => {
-			InitFirebasePlayer(auth.Uid,initialPosition);
+			authUid = auth.Uid;
 		}, (FirebaseError e) => {
 			Debug.Log ("auth failure!! "+e);
 		});
@@ -82,7 +84,7 @@ public class NetworkManager : MonoBehaviour {
 			{
 				var level = this.gameObject.GetComponentInChildren<LevelScript>();
 
-				level.PopulateLayers(snapshot.DictionaryValue);
+				level.PopulateLayers(snapshot.DictionaryValue, this);
 			}
 		} catch (ArgumentNullException) {         }
 		yield return null;
@@ -100,10 +102,15 @@ public class NetworkManager : MonoBehaviour {
 		yield return null;
 	}
 
+	public void CreateLocalPlayer(Vector3 pos)
+	{
+		InitFirebasePlayer(authUid, pos);
+	}
+
 	/// <summary>
 	/// Create a Firebase object based on this current player logged in
 	/// </summary>
-	void InitFirebasePlayer(string id, Vector3 pos) {
+	public void InitFirebasePlayer(string id, Vector3 pos) {
 		identifier = "Player_"+id;
 		IDictionary<string, object> data = new Dictionary<string, object>();
 		data.Add ("position", JsonUtility.ToJson(pos));
