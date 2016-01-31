@@ -57,7 +57,7 @@ public class Cube : NetworkItem {
 			light = Mathf.Lerp(_previousLight, _targetLight, _lightInterpolationTime);
 				
 			intensity = (light/100f > 1) ? 1 : light/100f;
-			intensity =  Mathf.Max(intensity, 0.5f);
+			//intensity =  Mathf.Max(intensity, 0.5f);
 				
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;

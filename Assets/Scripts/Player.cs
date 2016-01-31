@@ -9,6 +9,7 @@ public class Player : NetworkItem {
 	public GameObject head;
 	public Color[] colors = new Color[10];
 	public Renderer renderer;
+	public Rigidbody rb;
 
 	/// <summary>
 	/// Awake this instance.
@@ -31,6 +32,7 @@ public class Player : NetworkItem {
 	/// </summary>
 	public void Start() {
 		base.Start ();
+		rb = GetComponent<Rigidbody> ();
 		renderer = gameObject.GetComponent<Renderer> ();
 		if (_isPlayer == true) {
 			Input.gyro.enabled = true;
@@ -49,12 +51,6 @@ public class Player : NetworkItem {
 		//Playable
 		if (_isPlayer) {
 
-			//Control motion
-			MoveByGamepad ();
-
-			//Auto move for now
-//			transform.Translate(head.transform.forward*0.1f);
-
 			//Set properties to propagate
 			SetValues ();
 
@@ -64,13 +60,34 @@ public class Player : NetworkItem {
 		}
 
 	}
-	public float speed = 10.0F;
+
+	public void Update() {
+		base.Update ();
+
+		//Playable
+		if (_isPlayer) {
+			//Control motion
+			MoveByGamepad ();
+		}
+
+	}
+
+	public float speed = 2.0F;
 	void MoveByGamepad()
 	{
 		var v = Input.GetAxis ("Vertical")*speed;
 		var h = Input.GetAxis ("Horizontal")*speed;
 		transform.Translate (head.transform.forward * v * Time.deltaTime,Space.World);
 		transform.Translate (head.transform.right * h * Time.deltaTime,Space.Self);
+
+		// Get our local Y+ vector (relative to world)
+		Vector3 localUp = transform.up ;
+		// Now build a rotation taking us from our current Y+ vector towards the actual world Y+
+		Quaternion vertical = Quaternion.FromToRotation (localUp, Vector3.up) * rb.rotation ;
+		// How far are we tilted off the ideal Y+ world rotation?
+		float angleVerticalDiff = Quaternion.Angle (rb.rotation, vertical) ;
+		GetComponent<Rigidbody>().MoveRotation (Quaternion.Slerp (rb.rotation, vertical, Time.deltaTime * 5f)) ;
+
 	}
 	/// <summary>
 	/// Based on the values stored in "SetValues" use them to update this gameobject instance
@@ -104,4 +121,8 @@ public class Player : NetworkItem {
 		_properties ["color"] = JsonUtility.ToJson (renderer.material.color);
 	}
 		
+
+	void OnGUI(){ 
+		GUI.Label (new Rect (100, 100, 300,150),"H:"+Input.GetAxis ("Horizontal").ToString ()+" V:"+Input.GetAxis ("Vertical").ToString ());
+	}
 }
