@@ -53,7 +53,9 @@ public class Player : NetworkItem {
 
 	void decreaseTimeRemaining()
 	{
-		timeRemaining --;
+		if (RenderSettings.ambientIntensity > 0) {
+			timeRemaining--;
+		}
 		text.text = timeRemaining+" sec";
 	}
 
