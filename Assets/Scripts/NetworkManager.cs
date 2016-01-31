@@ -20,6 +20,8 @@ public class NetworkManager : MonoBehaviour {
 	}
 
 	string authUid;
+	bool localPlayerCreated;
+	Vector3 localPlayerStartPosition;
 
 	/// <summary>
 	/// Initialise this player
@@ -31,6 +33,8 @@ public class NetworkManager : MonoBehaviour {
 		firebase.UnAuth ();
 		firebase.AuthAnonymously ((AuthData auth) => {
 			authUid = auth.Uid;
+			Debug.Log("authUid = "+auth.Uid);
+			CreateLocalPlayer(localPlayerStartPosition);
 		}, (FirebaseError e) => {
 			Debug.Log ("auth failure!! "+e);
 		});
@@ -104,17 +108,25 @@ public class NetworkManager : MonoBehaviour {
 
 	public void CreateLocalPlayer(Vector3 pos)
 	{
-		InitFirebasePlayer(authUid, pos);
+		localPlayerStartPosition = pos;
+		if (!localPlayerCreated) {
+			if (!string.IsNullOrEmpty (authUid)) {
+				InitFirebasePlayer (authUid, localPlayerStartPosition);
+				localPlayerCreated = true;
+			}
+		}
 	}
 
 	/// <summary>
 	/// Create a Firebase object based on this current player logged in
 	/// </summary>
 	public void InitFirebasePlayer(string id, Vector3 pos) {
-		identifier = "Player_"+id;
-		IDictionary<string, object> data = new Dictionary<string, object>();
-		data.Add ("position", JsonUtility.ToJson(pos));
-		data.Add ("rotation", JsonUtility.ToJson(Quaternion.identity));
-		firebase.Child(identifier).SetValue(data);
+		
+			identifier = "Player_" + id;
+			IDictionary<string, object> data = new Dictionary<string, object> ();
+			data.Add ("position", JsonUtility.ToJson (pos));
+			data.Add ("rotation", JsonUtility.ToJson (Quaternion.identity));
+			firebase.Child (identifier).SetValue (data);
+
 	}
 }
