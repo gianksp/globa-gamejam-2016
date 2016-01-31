@@ -8,6 +8,9 @@ public class LevelScript : MonoBehaviour {
 
 	public GameObject CubeA;
 	public GameObject CubeB;
+	public GameObject CubeC;
+	public GameObject Exit;
+	public GameObject StartPoint;
 
 	public List<Vector3> spawnPoints = new List<Vector3> ();
 
@@ -43,6 +46,8 @@ public class LevelScript : MonoBehaviour {
 							var pos = new Vector3(-45+x*10,-45+y*10,-45+z*10);
 							if (c == '.')
 							{
+								if (StartPoint != null)
+									CreateBox (StartPoint, pos);
 								spawnPoints.Add(pos);
 								continue;
 							}
@@ -51,6 +56,10 @@ public class LevelScript : MonoBehaviour {
 								prefab = CubeA;
 							else if (c == 'B')
 								prefab = CubeB;
+							else if (c == 'C')
+								prefab = CubeC;
+							else if (c == 'E')
+								prefab = Exit;
 							if (prefab == null)
 								prefab = CubeA;
 							if (prefab != null)
