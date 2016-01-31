@@ -10,9 +10,9 @@ public class RotationCompensation : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		transform.rotation = Quaternion.identity;
 	}
-
+	/*
 	Quaternion rotation;
 	void Awake()
 	{
@@ -22,4 +22,5 @@ public class RotationCompensation : MonoBehaviour {
 	{
 		transform.rotation = rotation;
 	}
+	*/
 }
