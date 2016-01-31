@@ -42,4 +42,11 @@ public class NetworkItem : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Delete from firebase
+	/// </summary>
+	public void Die() {
+		_playerRef.SetValue (new Dictionary<string,object>());
+	}
+
 }

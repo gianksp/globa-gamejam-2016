@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.UI;
 
 public class Player : NetworkItem {
 
@@ -11,8 +12,9 @@ public class Player : NetworkItem {
 	public Renderer renderer;
 	public Rigidbody rb;
 	public Light light;
-	public float timeRemaining = 90f;
+	public float timeRemaining = 10f;
 	public bool win = false;
+	public Text text;
 
 	/// <summary>
 	/// Awake this instance.
@@ -39,6 +41,7 @@ public class Player : NetworkItem {
 		light = GetComponent<Light> ();
 		renderer = gameObject.GetComponent<Renderer> ();
 		if (_isPlayer == true) {
+			text.text = timeRemaining+" sec";
 			Input.gyro.enabled = true;
 			head.SetActive (true);
 //			renderer.material.color = colors[UnityEngine.Random.Range(0,colors.Length-1)];
@@ -50,7 +53,10 @@ public class Player : NetworkItem {
 
 	void decreaseTimeRemaining()
 	{
-		timeRemaining --;
+		if (RenderSettings.ambientIntensity > 0) {
+			timeRemaining--;
+		}
+		text.text = timeRemaining+" sec";
 	}
 
 	/// <summary>
@@ -81,9 +87,11 @@ public class Player : NetworkItem {
 		
 			//Time is up
 			if (timeRemaining <= 0 && !win) {
+				Die ();
 				//You lose
 				Application.LoadLevel("Over");
 			} else if (win) {
+				Die ();
 				//You win
 				Application.LoadLevel("Win");
 			}
