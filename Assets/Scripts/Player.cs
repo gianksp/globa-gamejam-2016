@@ -44,6 +44,8 @@ public class Player : NetworkItem {
 			text.text = timeRemaining+" sec";
 			Input.gyro.enabled = true;
 			head.SetActive (true);
+			foreach (var c in this.gameObject.GetComponentsInChildren<MeshRenderer> ())
+				c.enabled = false;
 //			renderer.material.color = colors[UnityEngine.Random.Range(0,colors.Length-1)];
 			InvokeRepeating("decreaseTimeRemaining", 1.0f, 1.0f);
 		} else {
