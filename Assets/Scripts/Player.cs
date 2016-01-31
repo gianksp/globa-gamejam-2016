@@ -156,4 +156,10 @@ public class Player : NetworkItem {
 	void OnGUI(){ 
 		GUI.Label (new Rect (100, 100, 300,150),"H:"+Input.GetAxis ("Horizontal").ToString ()+" V:"+Input.GetAxis ("Vertical").ToString ());
 	}
+
+	void OnCollisionEnter(Collision collision) {
+		if (collision.transform.tag == "Exit") {
+			win = true;
+		}
+	}
 }
