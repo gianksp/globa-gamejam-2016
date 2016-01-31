@@ -4,13 +4,17 @@ using System.Collections.Generic;
 using System;
 
 public class Cube : NetworkItem {
-
+	private Quaternion _previousRotation = Quaternion.identity;
 	private Vector3 _targetPosition;
-	private Quaternion _targetRotation;
+	private Quaternion _targetRotation = Quaternion.identity;
+	float _interpolationTime = 0;
+
 	private float light;
 	private float fog;
 //	public Light masterLight;
-	public float targetLight;
+	public float _targetLight = 100;
+	public float _previousLight = 100;
+	float _lightInterpolationTime = 0;
 	public float intensity;
 
 	/// <summary>
@@ -28,16 +32,37 @@ public class Cube : NetworkItem {
 	public void InterpretValues() {
 		try {
 			if (_properties != null && _properties.Count > 0) {
+				var rot = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
+				if (rot != _targetRotation)
+				{
+					_targetRotation = rot;
+					_previousRotation = transform.rotation;
+					_interpolationTime = 0;
+				}
+
+				var l = float.Parse(_properties["light"].ToString());
+				if (l != _targetLight)
+				{
+					_previousLight = Mathf.Lerp(_previousLight, _targetLight, _lightInterpolationTime);
+					_targetLight = l;
+					_lightInterpolationTime = 0;
+				}
+			}
+
+			_interpolationTime = Mathf.Min(1.0f, _interpolationTime+Time.deltaTime*5f);
+			_lightInterpolationTime = Mathf.Min(1.0f, _lightInterpolationTime+Time.deltaTime*5f);
+
+
+			transform.rotation = Quaternion.Lerp(_previousRotation, _targetRotation, _interpolationTime);
+			light = Mathf.Lerp(_previousLight, _targetLight, _lightInterpolationTime);
 				
-				_targetRotation    = JsonUtility.FromJson<Quaternion> (_properties["rotation"].ToString());
-				transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, Time.deltaTime*5f);
-				targetLight = float.Parse(_properties["light"].ToString());
-				intensity   = light/100f > 1 ? 1 : light/100f;
-				light = Mathf.Lerp(light, targetLight, Time.deltaTime*2f);
+			intensity = (light/100f > 1) ? 1 : light/100f;
+			intensity =  Mathf.Max(intensity, 0.1f);
+				
 				RenderSettings.ambientIntensity = intensity;
 				RenderSettings.fogDensity       = 0.01f*intensity;
 //				masterLight.intensity           = intensity;
-			}
+
 		} catch (Exception ex) { }
 	}
 }
